@@ -439,16 +439,16 @@
                         </label>
                     </div>
                     <div class="recipe">
-                        <input type="radio" name="complexity" value="Höheres Niveau" id="Höheres Niveau">
-                        <label for="Höheres Niveau">
-                            <span>Höheres Niveau</span>
+                        <input type="radio" name="complexity" value="gehobene Küche" id="gehobene Küche">
+                        <label for="gehobene Küche">
+                            <span>gehobene Küche</span>
                         </label>
                     </div>
                     <div class="recipe">
-                        <input type="radio" name="complexity" value="Exquisites Michelin-Stern"
-                            id="Exquisites Michelin-Stern">
-                        <label for="Exquisites Michelin-Stern">
-                            <span>Exquisites Michelin-Stern</span>
+                        <input type="radio" name="complexity" value="fünf Sterne Küche"
+                            id="fünf Sterne Küche">
+                        <label for="fünf Sterne Küche">
+                            <span>fünf Sterne Küche</span>
                         </label>
                     </div>
                 </div>
@@ -601,13 +601,13 @@
             var selectElement = document.querySelector('.servingSelect');
             var serving = selectElement.value
 
-            prompt = `You are the recipe generator. Please create a detailed step by step recipe in german language with the following requirements:\n
+            prompt = `I need you to generate a nutrient dense recipe to improve mitochondrial health. Please create a detailed step by step recipe in german language with the following requirements:\n
 
 1. Meal type: ${resultMealType}\n
-2. Recipe Ingredients to include: ${ingredients}\n
+2. Recipe Ingredients to include: ${ingredients}\n (do not use ONLY these ingredients. Use more ingredients)
 3. Recipe Ingredients to exclude: ${ingredients1}\n
 4. Dietary preferences (if any): ${resultDiet}\n
-5. Complexity: ${resultComplexity}\n
+5. Level: ${resultComplexity}\n
 6. Cooking Time: ${resultCookingTime}\n
 7. Serving size: ${serving}\n
   `
