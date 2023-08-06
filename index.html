@@ -284,7 +284,7 @@
             </div> -->
             <div class="col-12 mt-4">
                 <label class="label-title">🥦Spezifische Zutaten einzuschließen</label><span
-                    class="ingredients validError"></span>
+                    class="ingredients"></span>
                 <div class="form-group mx-auto">
                     <textarea class="form-control" rows="3" id="ingredients"
                         placeholder="Geben Sie Zutaten ein, die durch Kommas getrennt werden..."></textarea>
@@ -548,12 +548,12 @@
             }
 
             var ingredients = document.getElementById("ingredients").value
-            if (document.getElementById('ingredients').value == "") {
-                document.getElementsByClassName('ingredients')[0].innerHTML = "Bitte wählen Sie mindestens eine Zutat aus"
-            }
-            if (document.getElementById('ingredients').value != "") {
-                document.getElementsByClassName('ingredients')[0].innerHTML = ""
-            }
+            // if (document.getElementById('ingredients').value == "") {
+            //     document.getElementsByClassName('ingredients')[0].innerHTML = "Bitte wählen Sie mindestens eine Zutat aus"
+            // }
+            // if (document.getElementById('ingredients').value != "") {
+            //     document.getElementsByClassName('ingredients')[0].innerHTML = ""
+            // }
 
             var ingredients1 = document.getElementById("ingredients1").value
 
@@ -601,7 +601,7 @@
             var selectElement = document.querySelector('.servingSelect');
             var serving = selectElement.value
 
-            prompt = `I need you to generate a nutrient dense recipe to improve mitochondrial health. Please create a detailed step by step recipe in german language with the following requirements:\n
+            prompt = `Erstelle mir ein nährstoffdichtes Rezept um mitochondriale Gesundheit zu verbessern. Bitte erstelle ein detailliertes Schritt-für-Schritt Rezept in Deutsch mit den folgenden Anforderungen:\n
 
 1. Meal type: ${resultMealType}\n
 2. Recipe Ingredients to include: ${ingredients}\n (do not use ONLY these ingredients. Use more ingredients)
@@ -610,10 +610,10 @@
 5. Level: ${resultComplexity}\n 
 6. Cooking Time: ${resultCookingTime}\n
 7. Serving size: ${serving}\n
-Always think of a creative and also a little funny title for the recipe. Also explain in detail how the ingredients of this recipe improve mitochondrial health. when "fünf Sterne Küche" is chosen for level, then make it exquisite and use rare ingredients.`
+Achte darauf, dass die Mahlzeit immer proteinreich ist, und dass keine Nahrungsmittel mit viel Linolsäure eingesetzt werden. Denke dir immer einen cleveren und etwas lustigen Titel für das Rezept aus. Erkläre auch immer im Detail warum die Inhaltsstoffe dieses Rezeptes so gut für die Mitochondrien sind.`
 
 console.log(prompt)
-            if (resultMealType != "" && resultCookingTime != "" && ingredients != "" && resultComplexity != "") {
+            if (resultMealType != "" && resultCookingTime != "" && resultComplexity != "") {
 
                 var url = "https://api.openai.com/v1/chat/completions";
 
