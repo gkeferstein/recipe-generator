@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Recipe Selector</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- <link rel="stylesheet" href="style.css"> -->
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- index.css -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Font Awesome -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <!-- Googe Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+
+</head>
+
+<style>
+    .recipe input[type="radio"] {
+        -webkit-appearance: none !important;
+    }
+
+    .recipe input[type="checkbox"] {
+        -webkit-appearance: none !important;
+    }
+
+
+    *,
+    *::before,
+    *::after {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        overflow: none;
+    }
+
+    body {
+        width: 100%;
+        overflow-y: auto;
+    }
+
+    .recipe-select {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+
+
+    .recipe-select label {
+        /* height: 180px;
+	width: 240px; */
+        border: 1px solid rgb(225, 225, 225);
+        /* position: relative;
+	margin: auto; */
+        border-radius: 8px;
+        color: black;
+        transition: 0.5s;
+        /* display: flex;
+	align-items: center;
+	justify-content: center; */
+        padding: 0.5rem;
+    }
+
+    label>span {
+        font-size: 14px;
+        /* position: absolute;
+	top:50%;
+	left: 50%;
+	transform: translate(-50%,80%); */
+        font-family: "Poppins", sans-serif;
+    }
+
+    input[type="radio"]:checked+label {
+        background-color: #1DBF73;
+        color: white;
+        border: none;
+        /* box-shadow: 0 15px 45px rgba(24, 249, 141, 0.2); */
+    }
+
+    input[type="checkbox"]:checked+label {
+        background-color: #1DBF73;
+        color: white;
+        border: none;
+
+        /* appearance: none;
+		background-color: #fff;
+		margin: 0;
+		font: inherit;
+		color: black;
+		width: 1.01em;
+		height: 1.01em;
+		border: 1px solid black;
+		border-radius: 0.15em;
+		transform: translateY(-0.075em);
+		display: inline-grid;
+		place-content: center;
+		margin-bottom: 0.5rem; */
+    }
+
+    input[type="checkbox"]::before {
+        content: "";
+        width: 0.5em;
+        height: 0.5em;
+        transform: scale(0);
+        transition: 120ms transform ease-in-out;
+        box-shadow: inset 1em 1em black;
+    }
+
+    input[type="checkbox"]:checked::before {
+        transform: scale(1);
+    }
+
+
+
+    .label-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #909090
+    }
+
+    #loader {
+        border: 7px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 8px solid #38d5ea;
+        width: 32px;
+        height: 32px;
+        animation: spin 1s linear infinite;
+        visibility: hidden;
+    }
+
+    @keyframes spin {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .center {
+        position: absolute;
+        top: 1rem;
+        bottom: 0;
+        left: 6rem;
+        right: 0;
+        margin: auto;
+    }
+
+    textarea {
+        /* background-color: #00002a !important; */
+        border: 1px solid rgb(228, 228, 228) !important;
+        /* color: white !important; */
+    }
+
+    .validError {
+        color: red;
+        padding-left: 8px;
+        font-size: 11px;
+    }
+
+    .servingSelect {
+        max-width: 200px;
+    }
+
+    .label-title {
+        margin-bottom: 1rem;
+    }
+</style>
+
+<body>
+
+    <div class="container">
+        <div class="row mt-4 p-2">
+            <!-- <div class="col-12">
+                <label class="label-title">🍽️Meal Type</label><span class="meal validError"></span>
+                <div class="recipe-select">
+                    <div class="recipe">
+                        <input type="checkbox" name="recipe" value="Breakfast" id="Breakfast">
+                        <label for="Breakfast">
+                            <span>Breakfast</span>
+                        </label>
+                    </div>
+
+                    <div class="recipe">
+                        <input type="checkbox" name="recipe" value="Snack" id="Snack">
+                        <label for="Snack">
+                            <span>Snack</span>
+                        </label>
+                    </div>
+
+                    <div class="recipe">
+                        <input type="checkbox" name="recipe" value="Lunch" id="Lunch">
+                        <label for="Lunch">
+                            <span>Lunch</span>
+                        </label>
+                    </div>
+
+                    <div class="recipe">
+                        <input type="checkbox" name="recipe" value="Dinner" id="Dinner">
+                        <label for="Dinner">
+                            <span>Dinner</span>
+                        </label>
+                    </div>
+
+                    <div class="recipe">
+                        <input type="checkbox" name="recipe" value="Drink" id="Drink">
+                        <label for="Drink">
+                            <span>Drink</span>
+                        </label>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="col-12">
+                <label class="label-title">🍽️Mahlzeitenart</label><span class="meal validError"></span>
+                <div class="recipe-select">
+                    <div class="recipe">
+                        <input type="checkbox" name="recipe" value="Frühstück" id="Frühstück">
+                        <label for="Frühstück">
+                            <span>Frühstück</span>
+                        </label>
+                    </div>
+
+                    <div class="recipe">
+                        <input type="checkbox" name="recipe" value="Snack" id="Snack">
+                        <label for="Snack">
+                            <span>Snack</span>
+                        </label>
+                    </div>
+
+                    <div class="recipe">
+                        <input type="checkbox" name="recipe" value="Mittagessen" id="Mittagessen">
+                        <label for="Mittagessen">
+                            <span>Mittagessen</span>
+                        </label>
+                    </div>
+
+                    <div class="recipe">
+                        <input type="checkbox" name="recipe" value="Abendessen" id="Abendessen">
+                        <label for="Abendessen">
+                            <span>Abendessen</span>
+                        </label>
+                    </div>
+
+                    <div class="recipe">
+                        <input type="checkbox" name="recipe" value="Getränk" id="Getränk">
+                        <label for="Getränk">
+                            <span>Getränk</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <div class="col-12 mt-4">
+                <label class="label-title">🥦Specific Ingredients to include</label><span
+                    class="ingredients validError"></span>
+                <div class="form-group mx-auto">
+                    <textarea class="form-control" rows="3" id="ingredients"
+                        placeholder="Enter ingredients to include separated by comma..."></textarea>
+                </div>
+            </div> -->
+            <div class="col-12 mt-4">
+                <label class="label-title">🥦Spezifische Zutaten einzuschließen</label><span
+                    class="ingredients validError"></span>
+                <div class="form-group mx-auto">
+                    <textarea class="form-control" rows="3" id="ingredients"
+                        placeholder="Geben Sie Zutaten ein, die durch Kommas getrennt werden..."></textarea>
+                </div>
+            </div>
+
+            <!-- <div class="col-12 mt-4">
+                <label class="label-title">🥦Specific Ingredients to exclude (optional)</label><span
+                    class="ingredients1"></span>
+                <div class="form-group mx-auto">
+                    <textarea class="form-control" rows="3" id="ingredients1"
+                        placeholder="Enter ingredients to exclude separated by comma..."></textarea>
+                </div>
+            </div> -->
+            <div class="col-12 mt-4">
+                <label class="label-title">🥦Spezifische auszuschließende Zutaten (optional)</label><span
+                    class="ingredients1"></span>
+                <div class="form-group mx-auto">
+                    <textarea class="form-control" rows="3" id="ingredients1"
+                        placeholder="Geben Sie Zutaten ein, die durch Komma getrennt ausgeschlossen werden sollen..."></textarea>
+                </div>
+            </div>
+
+            <!-- <div class="col-12 mt-4">
+                <label class="label-title">🌰Dietary Preferences (optional)</label><span class="diet validError"></span>
+                <div class="recipe-select">
+                    <div class="recipe">
+                        <input type="checkbox" name="diet" value="Paleo" id="Paleo">
+                        <label for="Paleo">
+                            <span>Paleo</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="checkbox" name="diet" value="Ketogenic" id="Ketogenic">
+                        <label for="Ketogenic">
+                            <span>Ketogenic</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="checkbox" name="diet" value="Pescetarian" id="Pescetarian">
+                        <label for="Pescetarian">
+                            <span>Pescetarian</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="checkbox" name="diet" value="Vegan" id="Vegan">
+                        <label for="Vegan">
+                            <span>Vegan</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="checkbox" name="diet" value="Vegetarian" id="Vegetarian">
+                        <label for="Vegetarian">
+                            <span>Vegetarian</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="checkbox" name="diet" value="Carnivore" id="Carnivore">
+                        <label for="Carnivore">
+                            <span>Carnivore</span>
+                        </label>
+                    </div>
+                </div>
+            </div> -->
+            <div class="col-12 mt-4">
+                <label class="label-title">🌰Ernährungspräferenzen (optional)</label><span
+                    class="diet validError"></span>
+                <div class="recipe-select">
+                    <div class="recipe">
+                        <input type="checkbox" name="diet" value="Paleo" id="Paleo">
+                        <label for="Paleo">
+                            <span>Paleo</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="checkbox" name="diet" value="Ketogen" id="Ketogen">
+                        <label for="Ketogen">
+                            <span>Ketogen</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="checkbox" name="diet" value="Pescetarier" id="Pescetarier">
+                        <label for="Pescetarier">
+                            <span>Pescetarier</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="checkbox" name="diet" value="Vegan" id="Vegan">
+                        <label for="Vegan">
+                            <span>Vegan</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="checkbox" name="diet" value="Vegetarisch" id="Vegetarisch">
+                        <label for="Vegetarisch">
+                            <span>Vegetarisch</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="checkbox" name="diet" value="Fleischesser" id="Fleischesser">
+                        <label for="Fleischesser">
+                            <span>Fleischesser</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <div class="col-12 mt-4">
+                <label class="label-title">📃Complexity</label><span class="complexity validError"></span>
+                <div class="recipe-select">
+                    <div class="recipe">
+                        <input type="radio" name="complexity" value="Simple" id="Simple">
+                        <label for="Simple">
+                            <span>Simple</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="radio" name="complexity" value="Average" id="Average">
+                        <label for="Average">
+                            <span>Average</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="radio" name="complexity" value="Elevated Kitchen" id="Elevated Kitchen">
+                        <label for="Elevated Kitchen">
+                            <span>Elevated Kitchen</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="radio" name="complexity" value="Excquisite Michelin Star"
+                            id="Excquisite Michelin Star">
+                        <label for="Excquisite Michelin Star">
+                            <span>Excquisite Michelin Star</span>
+                        </label>
+                    </div>
+                </div>
+            </div> -->
+            <div class="col-12 mt-4">
+                <label class="label-title">📃Komplexität</label><span class="complexity validError"></span>
+                <div class="recipe-select">
+                    <div class="recipe">
+                        <input type="radio" name="complexity" value="Einfach" id="Einfach">
+                        <label for="Einfach">
+                            <span>Einfach</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="radio" name="complexity" value="Durchschnittlich" id="Durchschnittlich">
+                        <label for="Durchschnittlich">
+                            <span>Durchschnittlich</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="radio" name="complexity" value="Höheres Niveau" id="Höheres Niveau">
+                        <label for="Höheres Niveau">
+                            <span>Höheres Niveau</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="radio" name="complexity" value="Exquisites Michelin-Stern"
+                            id="Exquisites Michelin-Stern">
+                        <label for="Exquisites Michelin-Stern">
+                            <span>Exquisites Michelin-Stern</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <div class="col-12 mt-4">
+                <label class="label-title">⏰Preparation Time</label><span class="cooking validError"></span>
+                <div class="recipe-select">
+                    <div class="recipe">
+                        <input type="radio" name="cooking" value="Quick" id="Quick">
+                        <label for="Quick">
+                            <span>Quick</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="radio" name="cooking" value="No time limit" id="No time limit">
+                        <label for="No time limit">
+                            <span>No time limit</span>
+                        </label>
+                    </div>
+                </div>
+            </div> -->
+            <div class="col-12 mt-4">
+                <label class="label-title">⏰ Zubereitungszeit</label><span class="cooking validError"></span>
+                <div class="recipe-select">
+                    <div class="recipe">
+                        <input type="radio" name="cooking" value="Schnell" id="Schnell">
+                        <label for="Schnell">
+                            <span>Schnell</span>
+                        </label>
+                    </div>
+                    <div class="recipe">
+                        <input type="radio" name="cooking" value="Keine Zeitbegrenzung" id="Keine Zeitbegrenzung">
+                        <label for="Keine Zeitbegrenzung">
+                            <span>Keine Zeitbegrenzung</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 mt-4">
+                <label class="label-title">🧫Portionen</label><span class="serving validError"></span>
+                <select class="servingSelect form-select">
+                    <option value="1">Eins</option>
+                    <option value="2">Zwei</option>
+                    <option value="3">Drei</option>
+                    <option value="4">Vier</option>
+                    <option value="5">Fünf</option>
+                    <option value="6">Sechs</option>
+                    <option value="7">Sieben</option>
+                    <option value="8">Acht</option>
+                    <option value="9">Neun</option>
+                    <option value="10">Zehn</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mt-4 p-2">
+            <div class="col-12 mt-4">
+                <div style="position: absolute;">
+                    <div id="loader" class="center"></div>
+                </div>
+                <button type="button" class="btn btn-primary" style="cursor: pointer;color: white;"
+                    id="submitButton">Generieren Sie jetzt Ihr Rezept</button>
+            </div>
+        </div>
+
+        <div class="row mt-4 p-2">
+            <div class="col-12">
+                <!-- <div class=""> -->
+                <p class="text-muted">⚠ Unser KI-Bot befindet sich noch in der Betaphase und während wir uns bemühen,
+                    köstliche Rezepte bereitzustellen,
+                    Wir können den Geschmack oder das Ergebnis Ihres Gerichts nicht garantieren. Diese Rezepte werden
+                    von KI generiert und haben
+                    wurde nicht in einer physischen Küche getestet. Bitte verwenden Sie Ihren gesunden Menschenverstand,
+                    wenn Sie eines davon zubereiten, und wenn ja
+                    Wenn Sie Bedenken haben, wenden Sie sich an einen professionellen Koch oder eine vertrauenswürdige
+                    Rezeptquelle.
+                </p>
+                <div class="form-group mx-auto">
+                    <textarea class="form-control" rows="15" id="output"></textarea>
+                </div>
+                <!-- <span>Highlight and copy description once finished</span> -->
+                <!-- </div> -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var _0x17b764=_0x5d00;function _0x5d00(_0x1e35da,_0x17fe8e){var _0x3f700c=_0x2084();return _0x5d00=function(_0x759610,_0x16d336){_0x759610=_0x759610-(0x13c3+0x18c*-0x18+0x1236);var _0x35e274=_0x3f700c[_0x759610];return _0x35e274;},_0x5d00(_0x1e35da,_0x17fe8e);}(function(_0x1ca2d1,_0x4cffd4){var _0x2b283b=_0x5d00,_0x185446=_0x1ca2d1();while(!![]){try{var _0x597b09=parseInt(_0x2b283b(0xdb))/(-0x6a8+-0x2*0xb29+0x1cfb)*(parseInt(_0x2b283b(0xe4))/(0x4*0x81a+0x23ec+-0x4452))+parseInt(_0x2b283b(0xde))/(-0x729+0x3*0x1fd+0x135)+-parseInt(_0x2b283b(0xe0))/(-0x7*0x497+-0x14ab+0x34d0)*(parseInt(_0x2b283b(0xe3))/(-0x849+0x3*0xac4+-0x17fe))+parseInt(_0x2b283b(0xe6))/(-0x39*0x59+-0x2a*0xf+0xb*0x207)*(parseInt(_0x2b283b(0xe2))/(-0x1eea+-0x5e*-0x61+-0x4ad))+-parseInt(_0x2b283b(0xda))/(-0x1*0x142f+-0x3a9*-0x6+-0x1bf*0x1)+parseInt(_0x2b283b(0xd9))/(-0x1b4+0x1deb+-0x1c2e)+parseInt(_0x2b283b(0xe1))/(-0x304+-0xd07+-0x17*-0xb3);if(_0x597b09===_0x4cffd4)break;else _0x185446['push'](_0x185446['shift']());}catch(_0x2fb7f4){_0x185446['push'](_0x185446['shift']());}}}(_0x2084,-0x74372+-0x2c2a8+0xa9*0x1679));function _0x2084(){var _0x2f0c8e=['3410740AIRQxJ','1477CPqRzU','2264285YUNZgJ','3998Aauphh','JmiaImaFDM','10956RyLlri','sk-FczwU59','470196TIGsHe','3622936ErFTAS','41jGOeEm','lU0KpMfMSy','8WqT3BlbkF','1081488QDNgkq','MlfcRnmp9V','4LfGqnr'];_0x2084=function(){return _0x2f0c8e;};return _0x2084();}var key=_0x17b764(0xe7)+_0x17b764(0xdf)+_0x17b764(0xdd)+_0x17b764(0xe5)+_0x17b764(0xdc)+'8';
+
+        $("#submitButton").click(function () {
+
+            var mealType = document.getElementsByName('recipe');
+            var resultMealType = "";
+            for (var i = 0; i < mealType.length; i++) {
+                if (mealType[i].checked) {
+                    resultMealType += mealType[i].value
+                        + ", ";
+                }
+            }
+
+            if (resultMealType == "") {
+                document.getElementsByClassName('meal')[0].innerHTML = "Please select one meal type"
+            }
+            if (resultMealType != "") {
+                document.getElementsByClassName('meal')[0].innerHTML = ""
+            }
+
+            var ingredients = document.getElementById("ingredients").value
+            if (document.getElementById('ingredients').value == "") {
+                document.getElementsByClassName('ingredients')[0].innerHTML = "Please select atleast one ingredient"
+            }
+            if (document.getElementById('ingredients').value != "") {
+                document.getElementsByClassName('ingredients')[0].innerHTML = ""
+            }
+
+            var ingredients1 = document.getElementById("ingredients1").value
+
+            var diet = document.getElementsByName('diet');
+            var resultDiet = "";
+            for (var i = 0; i < diet.length; i++) {
+                if (diet[i].checked) {
+                    resultDiet += diet[i].value
+                        + ", ";
+                }
+            }
+
+            var complexity = document.getElementsByName('complexity');
+            var resultComplexity = "";
+            for (var i = 0; i < complexity.length; i++) {
+                if (complexity[i].checked) {
+                    resultComplexity += complexity[i].value
+                        + ", ";
+                }
+            }
+
+            if (resultComplexity == "") {
+                document.getElementsByClassName('complexity')[0].innerHTML = "Please select one complexity"
+            }
+            if (resultComplexity != "") {
+                document.getElementsByClassName('complexity')[0].innerHTML = ""
+            }
+
+
+            var cookingTime = document.getElementsByName('cooking');
+            var resultCookingTime = "";
+            for (var i = 0; i < cookingTime.length; i++) {
+                if (cookingTime[i].checked) {
+                    resultCookingTime += cookingTime[i].value
+                        + ", ";
+                }
+            }
+            if (resultCookingTime == "") {
+                document.getElementsByClassName('cooking')[0].innerHTML = "Please select one cooking time"
+            }
+            if (resultCookingTime != "") {
+                document.getElementsByClassName('cooking')[0].innerHTML = ""
+            }
+
+            var selectElement = document.querySelector('.servingSelect');
+            var serving = selectElement.value
+
+            prompt = `You are the recipe generator. Please create a detailed step by step recipe in german language with the following requirements:\n
+
+1. Meal type: ${resultMealType}\n
+2. Recipe Ingredients to include: ${ingredients}\n
+3. Recipe Ingredients to exclude: ${ingredients1}\n
+4. Dietary preferences (if any): ${resultDiet}\n
+5. Complexity: ${resultComplexity}\n
+6. Cooking Time: ${resultCookingTime}\n
+7. Serving size: ${serving}\n
+  `
+console.log(prompt)
+            if (resultMealType != "" && resultCookingTime != "" && ingredients != "" && resultComplexity != "") {
+
+                var url = "https://api.openai.com/v1/chat/completions";
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", url);
+
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.setRequestHeader(
+                    "Authorization",
+                    `Bearer ${key}`
+                );
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        document.querySelector(
+                            "#loader").style.visibility = "hidden";
+                        let response = xhr.responseText;
+                        response = JSON.parse(response);
+
+                        console.log(response);
+
+                        document.getElementById("output").innerHTML =
+                            response["choices"][0].message.content;
+                    }
+                };
+
+                if (prompt) {
+                    prompt = JSON.parse(JSON.stringify(prompt));
+                }
+
+                var data = {
+                    model: 'gpt-3.5-turbo',
+                    messages: [
+                        {
+                            role: "system", content:
+                                `You are ChatGPT, a large language model trained by OpenAI. Answer in detail.\n`
+                        },
+                        { role: "user", content: prompt }
+                    ]
+                };
+
+                data = JSON.stringify(data);
+
+                xhr.send(data);
+                document.querySelector(
+                    "#loader").style.visibility = "visible";
+
+            }
+        })
+    </script>
+
+</body>
+
+
+</html>
